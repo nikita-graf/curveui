@@ -6,67 +6,67 @@
     <script src="js/jquery.js"></script>
     <script src="build.min.js"></script>
 
-    <script src="misc/keypress.js"></script>
-    <script>
-        $(function() {
-            keypress.register_combo({
-                keys: '`',
-                prevent_repeat: true,
-                on_keydown: function() {
-                    var $screenshot = $('#screenshot');
+    <!--<script src="misc/keypress.js"></script>-->
+    <!--<script>-->
+        <!--$(function() {-->
+            <!--keypress.register_combo({-->
+                <!--keys: '`',-->
+                <!--prevent_repeat: true,-->
+                <!--on_keydown: function() {-->
+                    <!--var $screenshot = $('#screenshot');-->
 
-                    if ($screenshot.is(':visible')) {
-                        $screenshot.hide();
-                    } else {
-                        $screenshot.show();
-                    }
-                }
-            });
-        })
+                    <!--if ($screenshot.is(':visible')) {-->
+                        <!--$screenshot.hide();-->
+                    <!--} else {-->
+                        <!--$screenshot.show();-->
+                    <!--}-->
+                <!--}-->
+            <!--});-->
+        <!--})-->
 
-window.x = 150;
-window.a = 0.1
+<!--window.x = 150;-->
+<!--window.a = 0.1-->
 
-        $(function() {
-            keypress.register_combo({
-                keys: 'q',
-                on_keydown: function() {
-                    window.x++;
-                }
-            });
+        <!--$(function() {-->
+            <!--keypress.register_combo({-->
+                <!--keys: 'q',-->
+                <!--on_keydown: function() {-->
+                    <!--window.x++;-->
+                <!--}-->
+            <!--});-->
 
-            keypress.register_combo({
-                keys: 'w',
-                on_keydown: function() {
-                    window.x--;
-                }
-            });
+            <!--keypress.register_combo({-->
+                <!--keys: 'w',-->
+                <!--on_keydown: function() {-->
+                    <!--window.x--;-->
+                <!--}-->
+            <!--});-->
 
-            keypress.register_combo({
-                keys: 'e',
-                on_keydown: function() {
-                    window.a -= 0.01;
-                }
-            });
+            <!--keypress.register_combo({-->
+                <!--keys: 'e',-->
+                <!--on_keydown: function() {-->
+                    <!--window.a -= 0.01;-->
+                <!--}-->
+            <!--});-->
 
-            keypress.register_combo({
-                keys: 'r',
-                on_keydown: function() {
-                    window.a += 0.01;
-                }
-            });
+            <!--keypress.register_combo({-->
+                <!--keys: 'r',-->
+                <!--on_keydown: function() {-->
+                    <!--window.a += 0.01;-->
+                <!--}-->
+            <!--});-->
 
-            keypress.register_combo({
-                keys: 'a',
-                on_keydown: function() {
-                    console.log(window.a);
-                    console.log(window.x);
+            <!--keypress.register_combo({-->
+                <!--keys: 'a',-->
+                <!--on_keydown: function() {-->
+                    <!--console.log(window.a);-->
+                    <!--console.log(window.x);-->
 
-                }
-            });
-        })
+                <!--}-->
+            <!--});-->
+        <!--})-->
 
-    </script>
+    <!--</script>-->
 
     <script>
         $(function() {
@@ -165,7 +165,7 @@ window.a = 0.1
 </head>
 <body>
 
-<div id="screenshot" style="position: absolute; left: 50%; margin-left: -318px; z-index: 10000; opacity: 0.7"><img src="screenshots/1.png"></div>
+<!--<div id="screenshot" style="position: absolute; left: 50%; margin-left: -318px; z-index: 10000; opacity: 0.7"><img src="screenshots/1.png"></div>-->
 
 <!--
 
