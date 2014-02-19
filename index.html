@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+
+    <script src="js/jquery.js"></script>
+    <script src="build.min.js"></script>
+
+    <script src="misc/keypress.js"></script>
+    <script>
+        $(function() {
+            keypress.register_combo({
+                keys: '`',
+                prevent_repeat: true,
+                on_keydown: function() {
+                    var $screenshot = $('#screenshot');
+
+                    if ($screenshot.is(':visible')) {
+                        $screenshot.hide();
+                    } else {
+                        $screenshot.show();
+                    }
+                }
+            });
+        })
+
+window.x = 150;
+window.a = 0.1
+
+        $(function() {
+            keypress.register_combo({
+                keys: 'q',
+                on_keydown: function() {
+                    window.x++;
+                }
+            });
+
+            keypress.register_combo({
+                keys: 'w',
+                on_keydown: function() {
+                    window.x--;
+                }
+            });
+
+            keypress.register_combo({
+                keys: 'e',
+                on_keydown: function() {
+                    window.a -= 0.01;
+                }
+            });
+
+            keypress.register_combo({
+                keys: 'r',
+                on_keydown: function() {
+                    window.a += 0.01;
+                }
+            });
+
+            keypress.register_combo({
+                keys: 'a',
+                on_keydown: function() {
+                    console.log(window.a);
+                    console.log(window.x);
+
+                }
+            });
+        })
+
+    </script>
+
+    <script>
+        $(function() {
+
+            $('#slider').curveui({
+                images: {
+                    background: 'images/1.png',
+                    leftArrow: 'images/left-arrow.png',
+                    rightArrow: 'images/right-arrow.png'
+                },
+                items: [
+                    {
+                        image: 'icons/arc_emergency.png',
+                        url: '/Emergency',
+                        text: 'Emergency'
+                    },
+                    {
+                        image: 'icons/arc_maps.png',
+                        url: '/Campus Map',
+                        text: 'Campus Map'
+                    },
+
+                    {
+                        image: 'icons/arc_athletics.png',
+                        url: '/Athletics',
+                        text: 'Athletics'
+                    },
+                    {
+                        image: 'icons/arc_checklist.png',
+                        url: '/Checklist',
+                        text: 'Checklist'
+                    },
+                    {
+                        image: 'icons/arc_blog.png',
+                        url: '/Blog',
+                        text: 'Blog'
+                    },
+                    {
+                        image: 'icons/arc_multimedia.png',
+                        url: '/Multimedia',
+                        text: 'Multimedia'
+                    },
+                    {
+                        image: 'icons/arc_references.png',
+                        url: '/References',
+                        text: 'References'
+                    },
+                    {
+                        image: 'icons/arc_handbook.png',
+                        url: '/Handbook',
+                        text: 'Handbook'
+                    },
+                    {
+                        image: 'icons/arc_directory.png',
+                        url: '/Directory',
+                        text: 'Directory'
+                    },
+                    {
+                        image: 'icons/arc_admissions.png',
+                        url: '/Admissions',
+                        text: 'Admissions'
+                    },
+                    {
+                        image: 'icons/arc_links.png',
+                        url: '/Links',
+                        text: 'Links'
+                    }
+                ]
+            })
+        })
+    </script>
+
+    <style>
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        #slider {
+            width: 640px;
+            height: 365px;
+            background-color: #cccccc;
+            color: #fff;
+        }
+
+        .center {
+            margin: 0 auto;
+        }
+
+    </style>
+
+
+
+</head>
+<body>
+
+<div id="screenshot" style="position: absolute; left: 50%; margin-left: -318px; z-index: 10000; opacity: 0.7"><img src="screenshots/1.png"></div>
+
+<!--
+
+
+<div style="width: 900px; height: 1px; border-bottom: 1px solid red; position: absolute; top: 240px;"></div>
+-->
+<!--<div style="height: 900px; width: 1px; border-left: 1px solid red; position: absolute; left: 50%; z-index: 99999"></div>-->
+    <div id="slider" class="center"></div>
+
+
+
+</body>
+</html>
