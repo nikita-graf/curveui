@@ -8,29 +8,17 @@ var MenuItem = function(config) {
 
     this.shape = new Kinetic.Shape({
         sceneFunc: function(context) {
-            var ctx = context._context;
-
             context.save();
                 context.scale(this.iconScale, this.iconScale);
                 context.drawImage(that.image, -50, 0);
             context.restore();
-
-//            context.save();
-//                context.scale(this.textScaleT, this.textScaleT);
-//                context.beginPath();
-//                context.rect(-30, 0, 60, 60);
-//                context.setAttr('fillStyle', 'blue');
-//                context.fill();
-//            context.restore();
-
-            //context.fillStrokeShape(this);
         },
         hitFunc: function(context) {
             context.save();
-            context.scale(this.textScaleT, this.textScaleT);
-            context.beginPath();
-            context.rect(0, -35 * this.iconScale, 200, 70);
-            context.closePath();
+                context.scale(this.iconScale, this.iconScale);
+                context.beginPath();
+                context.rect(-50, 0, 100, 100);
+                context.closePath();
             context.restore();
 
             context.fillStrokeShape(this);
@@ -38,7 +26,6 @@ var MenuItem = function(config) {
     });
 
     this.shape.iconScale = 1;
-
 
     this.shape.on('click', function(e) {
         that.menu.trigger('itemClicked', e, that);
@@ -70,9 +57,7 @@ jQuery.extend(MenuItem.prototype, events, {
             a = sign * Math.min(percent * 90, 90);
 
         this.shape.setX(320 + a + 75 * directionalPercent);
-
         this.shape.setY(90 + 466 * Math.cos(percent * 0.1 - Math.PI/2) );
-
         this.shape.iconScale = Math.max(1 / (1 + percent), 0.5);
     }
 });
@@ -99,7 +84,7 @@ var Menu = function(config) {
             that.render();
         },
         onFinish: function() {
-            that.trigger('stop');
+            that.trigger('stop', that.items[that.activeIndex - 1]);
         }
     });
 };
@@ -164,7 +149,10 @@ jQuery.extend(Menu.prototype, events, {
     },
 
     getNearestItemPosition: function(position) {
-        return 320 - Math.round(Math.abs((320 - position) / 100)) * 100;
+        this.activeIndex = Math.round(Math.abs((320 - position) / 100));
+        this.activeItem = this.items[this.activeIndex - 1];
+
+        return 320 - this.activeIndex * 100;
     },
 
     stop: function() {
@@ -172,6 +160,44 @@ jQuery.extend(Menu.prototype, events, {
         var position = this.getInertiaPosition();
 
         position = this.getNearestItemPosition(position);
+
+        this.endPosition = position;
+
+        this.inertia.setAttrs({
+            position: {
+                start: this.position,
+                end: position
+            }
+        });
+
+        this.inertia.reset();
+        this.inertia.play();
+    },
+
+    goTo: function(position) {
+        this.createTween(this.getNearestItemPosition(position));
+    },
+
+    next: function() {
+        var position = this.endPosition || this.position,
+            nextPosition = this.getNearestItemPosition(this.getAllowedPosition(position - 100));
+
+        this.createTween(nextPosition);
+    },
+
+    prev: function() {
+
+        var position = this.endPosition || this.position,
+            prevPosition = this.getNearestItemPosition(this.getAllowedPosition(position + 100));
+
+        this.createTween(prevPosition);
+    },
+
+    createTween: function(position) {
+
+        this.inertia.pause();
+
+        this.endPosition = position;
 
         this.inertia.setAttrs({
             position: {

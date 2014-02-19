@@ -2,6 +2,16 @@
 
 $.fn.curveui = function(options) {
 
+        function addCursor(shape) {
+            shape.on('mouseenter', function(e) {
+                document.body.style.cursor = "pointer";
+            });
+
+            shape.on('mouseleave', function(e) {
+                document.body.style.cursor = "default";
+            });
+        }
+
         return this.each(function() {
             var stage,
                 layer = new Kinetic.Layer(),
@@ -10,7 +20,7 @@ $.fn.curveui = function(options) {
 
             stage = new Kinetic.Stage({
                 container: 'slider',
-                width: 638,
+                width: 640,
                 height: 366
             });
 
@@ -28,6 +38,7 @@ $.fn.curveui = function(options) {
 
                     var leftArrow,
                         rightArrow,
+                        text,
                         enabled,
                         mouseDownX,
                         mouseDownPosition,
@@ -39,6 +50,17 @@ $.fn.curveui = function(options) {
                         menu = new Menu({
                             layer: layer
                         });
+
+                    text = new Kinetic.Text({
+                        x: 170,
+                        y: 285,
+                        text: '',
+                        fontSize: 35,
+                        fontFamily: 'Trebuchet MS',
+                        fill: '#fff',
+                        align: 'center',
+                        width: 300
+                    });
 
                     leftArrow = new Kinetic.Image({
                         image: images.leftArrow,
@@ -76,11 +98,24 @@ $.fn.curveui = function(options) {
                     }
 
                     menu.on('itemClicked', function(e, item) {
-//                        window.open(item.url, '_blank');
+                        if (item === menu.activeItem)
+                            window.open(item.url, '_blank');
+                    });
+
+                    text.on('click', function() {
+                        window.open(text.item.url, '_blank');
+                    })
+
+                    menu.on('stop', function(item) {
+                        text.item = item;
+                        text.text(item.text);
+                        layer.draw();
                     });
 
                     menu.setPosition( menu.getNearestItemPosition(menu.width));
                     menu.render();
+
+                    text.text(menu.items[menu.activeIndex - 1].text);
 
                     menuEvaluator.onMouseMove = function(e) {
                         position = mouseDownPosition +  (e.clientX - mouseDownX) * speed;
@@ -90,9 +125,6 @@ $.fn.curveui = function(options) {
                         enabled = false;
                         menu.stop();
                     };
-
-//                    layer.add(leftArrow);
-//                    layer.add(rightArrow);
 
                     evaluator.onMouseMove = function(e) {
                         if (evaluator.distance > 5) {
@@ -120,6 +152,33 @@ $.fn.curveui = function(options) {
                     $element.on('mousedown', function(e) {
                         evaluator.start(e);
                     });
+
+                    layer.add(text);
+                    layer.add(leftArrow);
+                    layer.add(rightArrow);
+
+
+                    leftArrow.cache();
+                    leftArrow.drawHitFromCache();
+
+                    rightArrow.cache();
+                    rightArrow.drawHitFromCache();
+
+                    addCursor(text);
+                    addCursor(leftArrow);
+                    addCursor(rightArrow);
+
+                    leftArrow.on('click', function() {
+                        evaluator.deregister();
+                        menu.prev();
+                    });
+
+                    rightArrow.on('click', function() {
+                        evaluator.deregister();
+                        menu.next();
+                    });
+
+                    layer.draw();
                 });
         });
     };
