@@ -115,7 +115,8 @@ $.fn.curveui = function(options) {
                     menu.setPosition( menu.getNearestItemPosition(menu.width));
                     menu.render();
 
-                    text.text(menu.items[menu.activeIndex - 1].text);
+                    text.item = menu.activeItem;
+                    text.text(menu.activeItem.text);
 
                     menuEvaluator.onMouseMove = function(e) {
                         position = mouseDownPosition +  (e.clientX - mouseDownX) * speed;
