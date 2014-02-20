@@ -14,14 +14,15 @@ $.fn.curveui = function(options) {
 
         return this.each(function() {
             var stage,
+                halfWidth = options.width / 2,
                 layer = new Kinetic.Layer(),
                 $element =  $(this),
                 images = [];
 
             stage = new Kinetic.Stage({
                 container: 'slider',
-                width: 640,
-                height: 366
+                width: options.width,
+                height: options.height
             });
 
             stage.add(layer);
@@ -39,6 +40,7 @@ $.fn.curveui = function(options) {
                     var leftArrow,
                         rightArrow,
                         text,
+                        arrowY = 0.77 * options.height,
                         enabled,
                         mouseDownX,
                         mouseDownPosition,
@@ -48,30 +50,42 @@ $.fn.curveui = function(options) {
                         menuEvaluator = new PointerEvaluator(),
 
                         menu = new Menu({
-                            layer: layer
+                            layer: layer,
+                            containerWidth: options.width,
+                            containerHeight: options.height,
+                            itemLength: 50
                         });
 
                     text = new Kinetic.Text({
-                        x: 170,
-                        y: 285,
+                        x: halfWidth,
+                        y: arrowY,
                         text: '',
-                        fontSize: 35,
+                        fontSize: options.width * 0.054,
                         fontFamily: 'Trebuchet MS',
-                        fill: '#fff',
-                        align: 'center',
-                        width: 300
+                        fill: '#fff'
                     });
+
+                    text.render  = function(item) {
+                        text.text(item.text);
+                        text.item = item;
+                        text.offsetX(text.width() / 2);
+                        text.offsetY(-text.height() / 1.6);
+                    };
 
                     leftArrow = new Kinetic.Image({
                         image: images.leftArrow,
-                        x: 110,
-                        y: 285
+                        x: 0.2  * options.width,
+                        y: arrowY,
+                        offsetX:  images.leftArrow.width / 2,
+                        offsetY:  -images.leftArrow.height / 2
                     });
 
                     rightArrow = new Kinetic.Image({
                         image: images.rightArrow,
-                        x: 490,
-                        y: 285
+                        x: 0.8 * options.width,
+                        y: arrowY,
+                        offsetX:  images.rightArrow.width / 2,
+                        offsetY:  -images.rightArrow.height / 2
                     });
 
                     layer.add(new Kinetic.Image({
@@ -84,7 +98,6 @@ $.fn.curveui = function(options) {
                             text: item.text,
                             url: item.url,
                             image: icons[index],
-                            margin: 50,
                             index: index
                         }));
                     });
@@ -107,16 +120,14 @@ $.fn.curveui = function(options) {
                     })
 
                     menu.on('stop', function(item) {
-                        text.item = item;
-                        text.text(item.text);
+                        text.render(item);
                         layer.draw();
                     });
 
                     menu.setPosition( menu.getNearestItemPosition(menu.width));
                     menu.render();
 
-                    text.item = menu.activeItem;
-                    text.text(menu.activeItem.text);
+                    text.render(menu.activeItem);
 
                     menuEvaluator.onMouseMove = function(e) {
                         position = mouseDownPosition +  (e.clientX - mouseDownX) * speed;
@@ -150,7 +161,7 @@ $.fn.curveui = function(options) {
 
                     };
 
-                    $element.on('mousedown', function(e) {
+                    $element.find('.kineticjs-content').on('mousedown', function(e) {
                         evaluator.start(e);
                     });
 

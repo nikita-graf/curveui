@@ -4,20 +4,21 @@ var MenuItem = function(config) {
 
     $.extend(this, config);
 
-    this.length = 100;
+    this.image.width2 = this.image.width / 2;
+    this.image.height2 = this.image.height / 2;
 
     this.shape = new Kinetic.Shape({
         sceneFunc: function(context) {
             context.save();
                 context.scale(this.iconScale, this.iconScale);
-                context.drawImage(that.image, -50, 0);
+                context.drawImage(that.image, -that.image.width2, -that.image.height2);
             context.restore();
         },
         hitFunc: function(context) {
             context.save();
                 context.scale(this.iconScale, this.iconScale);
                 context.beginPath();
-                context.rect(-50, 0, 100, 100);
+                context.rect(-that.image.width2, -that.image.height2, that.image.width, that.image.height);
                 context.closePath();
             context.restore();
 
@@ -47,17 +48,22 @@ var MenuItem = function(config) {
 jQuery.extend(MenuItem.prototype, events, {
 
     initialize: function(layer) {
+        this.constY = this.menu.containerHeight * 0.37;
+        this.constX = this.menu.containerWidth * 0.12;
+        this.constX2 = this.menu.containerWidth * 0.13;
+
+        this.constArc1 = 1.00322 * this.menu.containerHeight;
     },
 
     draw: function(x) {
         var distance =  x - this.menu.startPoint,
-            directionalPercent = distance / this.length,
+            directionalPercent = distance / this.menu.itemLength,
             percent = Math.abs(directionalPercent),
             sign = directionalPercent / (percent || 1),
-            a = sign * Math.min(percent * 90, 90);
+            a = sign * Math.min(percent * this.constX2, this.constX2);
 
-        this.shape.setX(320 + a + 75 * directionalPercent);
-        this.shape.setY(90 + 466 * Math.cos(percent * 0.1 - Math.PI/2) );
+        this.shape.setX(this.menu.startPoint + a + this.constX * directionalPercent);
+        this.shape.setY(this.constY + this.constArc1 * Math.cos(percent * 0.1 - Math.PI/2) );
         this.shape.iconScale = Math.max(1 / (1 + percent), 0.5);
     }
 });
@@ -74,7 +80,7 @@ var Menu = function(config) {
     this.items = [];
     this.width = 0;
     this.position = 0;
-    this.startPoint = 320;
+    this.startPoint = this.containerWidth / 2;
 
     this.inertia = new tween.Tween({
         duration: 0.6,
@@ -93,10 +99,10 @@ jQuery.extend(Menu.prototype, events, {
 
     add: function(item) {
         this.layer.add(item.shape);
-        item.initialize(this.layer);
         item.menu = this;
+        item.initialize(this.layer);
         this.items.push(item);
-        this.width += item.length;
+        this.width += this.itemLength;
     },
 
     getPosition: function() {
@@ -109,7 +115,7 @@ jQuery.extend(Menu.prototype, events, {
 
     getAllowedPosition: function(position) {
         position = Math.max(position, -this.width + this.startPoint);
-        position = Math.min(position, this.startPoint - 100);
+        position = Math.min(position, this.startPoint - this.itemLength);
 
         return position;
     },
@@ -121,7 +127,7 @@ jQuery.extend(Menu.prototype, events, {
 
         for (var i = 0; i < this.items.length; i++) {
             item = this.items[i];
-            y += item.length;
+            y += this.itemLength;
 
             item.draw(y);
         }
@@ -140,7 +146,7 @@ jQuery.extend(Menu.prototype, events, {
         var distance =  this.startPosition - this.position,
             deltaTime = (new Date()).getTime() - this.startTime,
             speed = distance / deltaTime,
-            deltaDistance = Math.round(speed * 100),
+            deltaDistance = Math.round(speed * this.itemLength),
             targetPosition;
 
         targetPosition = this.position - deltaDistance;
@@ -149,10 +155,10 @@ jQuery.extend(Menu.prototype, events, {
     },
 
     getNearestItemPosition: function(position) {
-        this.activeIndex = Math.round(Math.abs((320 - position) / 100));
+        this.activeIndex = Math.round(Math.abs((this.startPoint - position) / this.itemLength));
         this.activeItem = this.items[this.activeIndex - 1];
 
-        return 320 - this.activeIndex * 100;
+        return this.startPoint - this.activeIndex * this.itemLength;
     },
 
     stop: function() {
@@ -180,7 +186,7 @@ jQuery.extend(Menu.prototype, events, {
 
     next: function() {
         var position = this.endPosition || this.position,
-            nextPosition = this.getNearestItemPosition(this.getAllowedPosition(position - 100));
+            nextPosition = this.getNearestItemPosition(this.getAllowedPosition(position - this.itemLength));
 
         this.createTween(nextPosition);
     },
@@ -188,7 +194,7 @@ jQuery.extend(Menu.prototype, events, {
     prev: function() {
 
         var position = this.endPosition || this.position,
-            prevPosition = this.getNearestItemPosition(this.getAllowedPosition(position + 100));
+            prevPosition = this.getNearestItemPosition(this.getAllowedPosition(position + this.itemLength));
 
         this.createTween(prevPosition);
     },

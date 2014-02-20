@@ -6,11 +6,12 @@
     <script src="js/jquery.js"></script>
     <script src="build.min.js"></script>
 
-
     <script>
         $(function() {
 
             $('#slider').curveui({
+                width: 320,
+                height: 183,
                 images: {
                     background: 'images/1.png',
                     leftArrow: 'images/left-arrow.png',
@@ -87,15 +88,8 @@
         }
 
         #slider {
-            width: 640px;
-            height: 366px;
-            background-color: #cccccc;
-        }
 
-        .center {
-            margin: 0 auto;
         }
-
     </style>
 
 
@@ -103,7 +97,7 @@
 </head>
 <body>
 
-    <div id="slider" class="center"></div>
+    <div id="slider"></div>
 
 </body>
 </html>
