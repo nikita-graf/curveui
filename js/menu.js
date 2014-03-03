@@ -4,21 +4,18 @@ var MenuItem = function(config) {
 
     $.extend(this, config);
 
-    this.image.width2 = this.image.width / 2;
-    this.image.height2 = this.image.height / 2;
-
     this.shape = new Kinetic.Shape({
         sceneFunc: function(context) {
             context.save();
                 context.scale(this.iconScale, this.iconScale);
-                context.drawImage(that.image, -that.image.width2, -that.image.height2);
+                context.drawImage(that.image, 0, 0, that.image.width, that.image.height, -that.width2, -that.height2, that.width, that.height);
             context.restore();
         },
         hitFunc: function(context) {
             context.save();
                 context.scale(this.iconScale, this.iconScale);
                 context.beginPath();
-                context.rect(-that.image.width2, -that.image.height2, that.image.width, that.image.height);
+                context.rect(-that.width2, -that.height2, that.width, that.height);
                 context.closePath();
             context.restore();
 
@@ -48,6 +45,11 @@ var MenuItem = function(config) {
 jQuery.extend(MenuItem.prototype, events, {
 
     initialize: function(layer) {
+        this.width = this.image.width * this.menu.ratio;
+        this.height = this.image.height * this.menu.ratio;
+        this.width2 = this.width / 2;
+        this.height2 = this.height / 2;
+
         this.constY = this.menu.containerHeight * 0.37;
         this.constX = this.menu.containerWidth * 0.12;
         this.constX2 = this.menu.containerWidth * 0.13;

@@ -14,10 +14,13 @@ $.fn.curveui = function(options) {
 
         return this.each(function() {
             var stage,
+                ratio = options.width / 638,
                 halfWidth = options.width / 2,
                 layer = new Kinetic.Layer(),
                 $element =  $(this),
                 images = [];
+
+            options.height = 366 * ratio;
 
             stage = new Kinetic.Stage({
                 container: 'slider',
@@ -39,6 +42,7 @@ $.fn.curveui = function(options) {
 
                     var leftArrow,
                         rightArrow,
+                        arrowWidth = images.leftArrow.width * ratio,
                         text,
                         arrowY = 0.77 * options.height,
                         enabled,
@@ -51,9 +55,10 @@ $.fn.curveui = function(options) {
 
                         menu = new Menu({
                             layer: layer,
+                            ratio: ratio,
                             containerWidth: options.width,
                             containerHeight: options.height,
-                            itemLength: 50
+                            itemLength: 100 * ratio
                         });
 
                     text = new Kinetic.Text({
@@ -74,22 +79,28 @@ $.fn.curveui = function(options) {
 
                     leftArrow = new Kinetic.Image({
                         image: images.leftArrow,
+                        width: arrowWidth,
+                        height: arrowWidth,
                         x: 0.2  * options.width,
                         y: arrowY,
-                        offsetX:  images.leftArrow.width / 2,
-                        offsetY:  -images.leftArrow.height / 2
+                        offsetX:  arrowWidth / 2,
+                        offsetY:  -arrowWidth / 2
                     });
 
                     rightArrow = new Kinetic.Image({
                         image: images.rightArrow,
+                        width: arrowWidth,
+                        height: arrowWidth,
                         x: 0.8 * options.width,
                         y: arrowY,
-                        offsetX:  images.rightArrow.width / 2,
-                        offsetY:  -images.rightArrow.height / 2
+                        offsetX:  arrowWidth / 2,
+                        offsetY:  -arrowWidth / 2
                     });
 
                     layer.add(new Kinetic.Image({
-                        image: images.background
+                        image: images.background,
+                        width: options.width,
+                        height: options.height
                     }));
 
 
